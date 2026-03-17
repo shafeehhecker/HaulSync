@@ -5,7 +5,7 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 
-> **A self-hostable, full-stack freight & logistics management platform — built for enterprises, transport companies, and consignors.**
+> **A self-hostable, full-stack freight and logistics management platform — built for enterprises, transport companies, and consignors.**
 
 HaulSync digitizes your entire logistics workflow: RFQ-based indenting, real-time shipment tracking, fleet management, POD collection, invoice reconciliation, and analytics — all in one open-source platform you fully control.
 
