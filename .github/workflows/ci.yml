@@ -21,6 +21,9 @@ jobs:
           cache: 'npm'
           cache-dependency-path: backend/package-lock.json
       - run: npm ci
+# ⚠️ Requires package-lock.json
+        # ❌ Fails if package.json ≠ package-lock.json
+
       - run: npx prisma validate
 
   frontend-build:
