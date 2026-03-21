@@ -1,5 +1,4 @@
 name: CI
-
 on:
   push:
     branches: [main, develop]
@@ -13,6 +12,8 @@ jobs:
     defaults:
       run:
         working-directory: backend
+    env:
+      DATABASE_URL: postgresql://haulsync:haulsync_secret@localhost:5432/haulsync
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -21,9 +22,6 @@ jobs:
           cache: 'npm'
           cache-dependency-path: backend/package-lock.json
       - run: npm ci
-# ⚠️ Requires package-lock.json
-        # ❌ Fails if package.json ≠ package-lock.json
-
       - run: npx prisma validate
 
   frontend-build:
