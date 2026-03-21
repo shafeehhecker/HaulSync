@@ -1,7 +1,11 @@
 {
   "name": "haulsync-backend",
   "version": "1.0.0",
+<<<<<<< HEAD
   "description": "HaulSync Logistics OS — Backend API",
+=======
+  "description": "HaulSync Logistics OS â€” Backend API",
+>>>>>>> 91de8b8744d4352d6e7c4ab4bcd9363eed487ad3
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
