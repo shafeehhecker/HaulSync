@@ -58,7 +58,7 @@ haulsync/
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/your-org/haulsync.git
+git clone https://github.com/shafeehhecker/haulsync.git
 cd haulsync
 ```
 
