@@ -7,7 +7,7 @@ Thank you for your interest in contributing! HaulSync is built in the open and w
 ## Getting Started
 
 1. **Fork** the repository on GitHub
-2. **Clone** your fork: `git clone https://github.com/your-username/haulsync.git`
+2. **Clone** your fork: `git clone https://github.com/shafeehhecker/haulsync.git`
 3. **Set up** the dev environment (see README Quick Start)
 4. **Create a branch**: `git checkout -b feature/your-feature-name`
 
