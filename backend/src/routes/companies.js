@@ -1,37 +1,29 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const { authenticate, authorize } = require('../middleware/auth');
+const { validate, createCompanyRules, paginationRules } = require('../middleware/validators');
 
 const router = express.Router();
 const prisma = new PrismaClient();
-
 const ADMIN_ROLES = ['SUPER_ADMIN', 'ADMIN', 'MANAGER'];
 
-// GET /api/companies
-router.get('/', authenticate, async (req, res, next) => {
+router.get('/', authenticate, paginationRules, validate, async (req, res, next) => {
   try {
     const { page = 1, limit = 20, search, type } = req.query;
-    const skip = (page - 1) * limit;
-
+    const skip = (Number(page) - 1) * Number(limit);
     const where = {
       isActive: true,
       ...(search && { name: { contains: search, mode: 'insensitive' } }),
       ...(type && { type }),
     };
-
     const [companies, total] = await Promise.all([
-      prisma.company.findMany({
-        where, skip: Number(skip), take: Number(limit),
-        orderBy: { name: 'asc' },
-      }),
+      prisma.company.findMany({ where, skip, take: Number(limit), orderBy: { name: 'asc' } }),
       prisma.company.count({ where }),
     ]);
-
     res.json({ data: companies, total, page: Number(page), limit: Number(limit) });
   } catch (err) { next(err); }
 });
 
-// GET /api/companies/:id
 router.get('/:id', authenticate, async (req, res, next) => {
   try {
     const company = await prisma.company.findUnique({
@@ -47,23 +39,43 @@ router.get('/:id', authenticate, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-// POST /api/companies
-router.post('/', authenticate, authorize(...ADMIN_ROLES), async (req, res, next) => {
-  try {
-    const company = await prisma.company.create({ data: req.body });
-    res.status(201).json(company);
-  } catch (err) { next(err); }
-});
+router.post(
+  '/',
+  authenticate,
+  authorize(...ADMIN_ROLES),
+  createCompanyRules,
+  validate,
+  async (req, res, next) => {
+    try {
+      const { name, type, email, phone, address, city, state, country, gstNumber } = req.body;
+      const company = await prisma.company.create({
+        data: { name, type, email, phone, address, city, state, country, gstNumber },
+      });
+      res.status(201).json(company);
+    } catch (err) { next(err); }
+  }
+);
 
-// PUT /api/companies/:id
 router.put('/:id', authenticate, authorize(...ADMIN_ROLES), async (req, res, next) => {
   try {
-    const company = await prisma.company.update({ where: { id: req.params.id }, data: req.body });
+    const { name, email, phone, address, city, state, country, gstNumber } = req.body;
+    const company = await prisma.company.update({
+      where: { id: req.params.id },
+      data: {
+        ...(name !== undefined && { name }),
+        ...(email !== undefined && { email }),
+        ...(phone !== undefined && { phone }),
+        ...(address !== undefined && { address }),
+        ...(city !== undefined && { city }),
+        ...(state !== undefined && { state }),
+        ...(country !== undefined && { country }),
+        ...(gstNumber !== undefined && { gstNumber }),
+      },
+    });
     res.json(company);
   } catch (err) { next(err); }
 });
 
-// DELETE /api/companies/:id
 router.delete('/:id', authenticate, authorize('SUPER_ADMIN', 'ADMIN'), async (req, res, next) => {
   try {
     await prisma.company.update({ where: { id: req.params.id }, data: { isActive: false } });
