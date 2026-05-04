@@ -152,7 +152,15 @@ git commit -m "feat: add your feature"
 git push origin feature/your-feature-name
 # Open a Pull Request
 ```
+## Design System
 
+This module uses **teal** (`#14B8A6`) as its accent color to distinguish it from:
+- **HaulSync Core** — Amber / Yellow (`#F59E0B`)
+- **HaulSync TMS** — Purple (`#8B5CF6`)
+- **HaulSync WMS** — Blue (`#3B82F6`)
+- **HaulSync In-Plant** — **Teal** (`#14B8A6`) ✅
+
+All modules share the same dark base (`zinc-950`), Syne + DM Sans typography, and the ⚡ Zap lightning logo — just colored differently per module.
 ---
 
 ## 📜 License
