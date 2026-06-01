@@ -165,3 +165,5 @@ GoodsType (reference data: FMCG, Pharma, Electronics...)
 5. Create `frontend/src/pages/YourModule/` React page
 6. Add route in `frontend/src/App.jsx`
 7. Add nav item in `frontend/src/components/Layout/Sidebar.jsx`
+
+## HaulSync Project
