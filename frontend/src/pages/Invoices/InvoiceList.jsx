@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Receipt } from 'lucide-react';
 import api from '../../api/client';
 import { PageHeader, Button, StatusBadge, SearchInput, EmptyState, Spinner } from '../../components/common';
+import { PrintButton } from './InvoicePrint';
 
 const STATUSES = ['', 'PENDING', 'SUBMITTED', 'UNDER_REVIEW', 'APPROVED', 'DISPUTED', 'PAID', 'CANCELLED'];
 
@@ -63,16 +64,19 @@ export default function InvoiceList() {
                     <td className="px-4 py-3 text-zinc-400 text-xs">{new Date(inv.invoiceDate).toLocaleDateString('en-IN')}</td>
                     <td className="px-4 py-3"><StatusBadge status={inv.status} /></td>
                     <td className="px-4 py-3">
-                      {inv.status === 'PENDING' && (
-                        <div className="flex gap-1">
-                          <button onClick={() => updateStatus(inv.id, 'APPROVED')} className="text-xs text-green-400 hover:text-green-300">Approve</button>
-                          <span className="text-zinc-700">·</span>
-                          <button onClick={() => updateStatus(inv.id, 'DISPUTED')} className="text-xs text-red-400 hover:text-red-300">Dispute</button>
-                        </div>
-                      )}
-                      {inv.status === 'APPROVED' && (
-                        <button onClick={() => updateStatus(inv.id, 'PAID')} className="text-xs text-amber-400 hover:text-amber-300">Mark Paid</button>
-                      )}
+                      <div className="flex flex-col gap-1">
+                        <PrintButton invoice={inv} />
+                        {inv.status === 'PENDING' && (
+                          <div className="flex gap-1">
+                            <button onClick={() => updateStatus(inv.id, 'APPROVED')} className="text-xs text-green-400 hover:text-green-300">Approve</button>
+                            <span className="text-zinc-700">·</span>
+                            <button onClick={() => updateStatus(inv.id, 'DISPUTED')} className="text-xs text-red-400 hover:text-red-300">Dispute</button>
+                          </div>
+                        )}
+                        {inv.status === 'APPROVED' && (
+                          <button onClick={() => updateStatus(inv.id, 'PAID')} className="text-xs text-amber-400 hover:text-amber-300">Mark Paid</button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}
