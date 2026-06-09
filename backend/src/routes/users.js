@@ -1,11 +1,11 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
-const { PrismaClient } = require('@prisma/client');
+
 const { authenticate, authorize } = require('../middleware/auth');
 const { validate, createUserRules, updateUserRules, paginationRules } = require('../middleware/validators');
 
 const router = express.Router();
-const prisma = new PrismaClient();
+const prisma = require('../prisma');
 
 const DEFAULT_PASSWORD = 'HaulSync@1234'; // kept for seeding only — always force-change on first login
 
