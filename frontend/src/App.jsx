@@ -16,6 +16,8 @@ import InvoiceList from './pages/Invoices/InvoiceList';
 import AnalyticsDashboard from './pages/Analytics/AnalyticsDashboard';
 import UserManagement from './pages/Users/UserManagement';
 import RouteManagement from './pages/Routes/RouteManagement';
+import ReportsPage from './pages/Reports/ReportsPage';
+import SettingsPage from './pages/Settings/SettingsPage';
 
 function ProtectedRoute({ children }) {
   const { user } = useAuth();
@@ -44,6 +46,8 @@ function AppRoutes() {
         <Route path="analytics" element={<AnalyticsDashboard />} />
         <Route path="users" element={<UserManagement />} />
         <Route path="routes" element={<RouteManagement />} />
+        <Route path="reports" element={<ReportsPage />} />
+        <Route path="settings" element={<SettingsPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
