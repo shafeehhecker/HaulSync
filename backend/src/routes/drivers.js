@@ -1,10 +1,10 @@
 const express = require('express');
-const { PrismaClient } = require('@prisma/client');
+
 const { authenticate, authorize } = require('../middleware/auth');
 const { validate, createDriverRules, paginationRules } = require('../middleware/validators');
 
 const router = express.Router();
-const prisma = new PrismaClient();
+const prisma = require('../prisma');
 
 router.get('/', authenticate, paginationRules, validate, async (req, res, next) => {
   try {
@@ -46,12 +46,14 @@ router.post(
   validate,
   async (req, res, next) => {
     try {
-      const { name, phone, licenseNo, licenseExpiry, companyId } = req.body;
+      const { name, phone, licenseNo, licenseExpiry, companyId, address, city, state, emergencyContact } = req.body;
       const driver = await prisma.driver.create({
         data: {
           name, phone, licenseNo,
           licenseExpiry: licenseExpiry ? new Date(licenseExpiry) : null,
-          companyId,
+          companyId: companyId || null,
+          address: address || null, city: city || null, state: state || null,
+          emergencyContact: emergencyContact || null,
         },
       });
       res.status(201).json(driver);
