@@ -1,10 +1,10 @@
 const express = require('express');
-const { PrismaClient } = require('@prisma/client');
+
 const { authenticate, authorize } = require('../middleware/auth');
 const { validate, createRFQRules, submitQuoteRules, paginationRules } = require('../middleware/validators');
 
 const router = express.Router();
-const prisma = new PrismaClient();
+const prisma = require('../prisma');
 
 function generateRFQNumber() {
   return `RFQ-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
@@ -86,18 +86,23 @@ router.post(
     try {
       // Whitelist fields
       const {
-        title, shipperId, goodsTypeId, routeId,
-        originCity, destCity, weight, loadingDate, deliveryDate, notes,
+        title, shipperCompanyId, goodsTypeId, routeId,
+        originCity, originState, destCity, destState, vehicleType,
+        weight, quantity, loadingDate, deliveryDate, basePrice, expiresAt, description, notes,
       } = req.body;
 
       const rfq = await prisma.rFQ.create({
         data: {
-          title, shipperId, goodsTypeId, routeId,
-          originCity, destCity,
+          title, shipperCompanyId, goodsTypeId: goodsTypeId || null, routeId: routeId || null,
+          originCity, originState, destCity, destState,
+          vehicleType: vehicleType || 'TRUCK',
           weight: weight ? Number(weight) : null,
-          loadingDate: loadingDate ? new Date(loadingDate) : null,
+          quantity: quantity ? Number(quantity) : 1,
+          loadingDate: new Date(loadingDate),
           deliveryDate: deliveryDate ? new Date(deliveryDate) : null,
-          notes,
+          basePrice: basePrice ? Number(basePrice) : null,
+          expiresAt: expiresAt ? new Date(expiresAt) : null,
+          description: description || notes || null,
           rfqNumber: generateRFQNumber(),
           createdById: req.user.id,
           status: 'OPEN',
