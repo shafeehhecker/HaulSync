@@ -1,10 +1,10 @@
 const express = require('express');
-const { PrismaClient } = require('@prisma/client');
+
 const { authenticate, authorize } = require('../middleware/auth');
 const { validate, createCompanyRules, paginationRules } = require('../middleware/validators');
 
 const router = express.Router();
-const prisma = new PrismaClient();
+const prisma = require('../prisma');
 const ADMIN_ROLES = ['SUPER_ADMIN', 'ADMIN', 'MANAGER'];
 
 router.get('/', authenticate, paginationRules, validate, async (req, res, next) => {
@@ -47,9 +47,9 @@ router.post(
   validate,
   async (req, res, next) => {
     try {
-      const { name, type, email, phone, address, city, state, country, gstNumber } = req.body;
+      const { name, type, email, phone, address, city, state, gstin, contactPerson } = req.body;
       const company = await prisma.company.create({
-        data: { name, type, email, phone, address, city, state, country, gstNumber },
+        data: { name, type, email, phone, address, city, state, gstin, contactPerson },
       });
       res.status(201).json(company);
     } catch (err) { next(err); }
@@ -58,7 +58,7 @@ router.post(
 
 router.put('/:id', authenticate, authorize(...ADMIN_ROLES), async (req, res, next) => {
   try {
-    const { name, email, phone, address, city, state, country, gstNumber } = req.body;
+    const { name, email, phone, address, city, state, gstin, contactPerson } = req.body;
     const company = await prisma.company.update({
       where: { id: req.params.id },
       data: {
@@ -68,8 +68,8 @@ router.put('/:id', authenticate, authorize(...ADMIN_ROLES), async (req, res, nex
         ...(address !== undefined && { address }),
         ...(city !== undefined && { city }),
         ...(state !== undefined && { state }),
-        ...(country !== undefined && { country }),
-        ...(gstNumber !== undefined && { gstNumber }),
+        ...(gstin !== undefined && { gstin }),
+        ...(contactPerson !== undefined && { contactPerson }),
       },
     });
     res.json(company);
