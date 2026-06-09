@@ -20,6 +20,7 @@ const invoiceRoutes = require('./src/routes/invoices');
 const analyticsRoutes = require('./src/routes/analytics');
 const goodsRoutes = require('./src/routes/goods');
 const routeRoutes = require('./src/routes/routes');
+const reportRoutes = require('./src/routes/reports');
 
 const app = express();
 const server = http.createServer(app);
@@ -61,6 +62,7 @@ app.use('/api/invoices', invoiceRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/goods', goodsRoutes);
 app.use('/api/routes', routeRoutes);
+app.use('/api/reports', reportRoutes);
 
 // NOTE: /uploads is NOT served as static — files are served via authenticated
 // endpoint in shipments route to prevent unauthenticated access.
