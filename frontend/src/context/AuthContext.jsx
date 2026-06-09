@@ -1,13 +1,23 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState } from 'react';
 import api from '../api/client';
 
 const AuthContext = createContext(null);
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => {
+// Safe JSON parse — corrupt localStorage crashes the app on every load without this
+function safeParseUser() {
+  try {
     const saved = localStorage.getItem('hs_user');
     return saved ? JSON.parse(saved) : null;
-  });
+  } catch {
+    // Corrupt data: clear it so the user is asked to log in again instead of getting a blank crash
+    localStorage.removeItem('hs_user');
+    localStorage.removeItem('hs_token');
+    return null;
+  }
+}
+
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(safeParseUser);
   const [loading, setLoading] = useState(false);
 
   const login = async (email, password) => {
@@ -18,6 +28,9 @@ export function AuthProvider({ children }) {
       localStorage.setItem('hs_user', JSON.stringify(data.user));
       setUser(data.user);
       return data;
+    } catch (err) {
+      // Re-throw so Login.jsx can display the correct error message
+      throw err;
     } finally {
       setLoading(false);
     }
