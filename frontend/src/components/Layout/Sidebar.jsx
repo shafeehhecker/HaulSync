@@ -1,8 +1,9 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
-  LayoutDashboard, ClipboardList, Truck, Package, Users, Building2,
-  Receipt, BarChart3, Map, LogOut, Zap, ChevronRight, TruckIcon, UserCheck
+  LayoutDashboard, ClipboardList, Package, Users, Building2,
+  Receipt, BarChart3, Map, LogOut, Zap, TruckIcon, UserCheck,
+  FileBarChart, Settings
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -15,6 +16,7 @@ const NAV_ITEMS = [
   { to: '/invoices', label: 'Invoices', icon: Receipt },
   { to: '/routes', label: 'Routes', icon: Map },
   { to: '/analytics', label: 'Analytics', icon: BarChart3 },
+  { to: '/reports', label: 'Reports', icon: FileBarChart },
 ];
 
 const ADMIN_ITEMS = [
@@ -71,8 +73,12 @@ export default function Sidebar() {
         )}
       </nav>
 
-      {/* User */}
-      <div className="px-3 py-4 border-t border-zinc-800">
+      {/* User + Settings */}
+      <div className="px-3 py-4 border-t border-zinc-800 space-y-1">
+        <NavLink to="/settings" className={linkClass}>
+          <Settings size={16} className="flex-shrink-0" />
+          <span>Settings</span>
+        </NavLink>
         <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-zinc-900">
           <div className="w-7 h-7 rounded-full bg-amber-500/20 flex items-center justify-center flex-shrink-0">
             <span className="text-xs font-bold text-amber-400">{user?.name?.[0]?.toUpperCase()}</span>
@@ -81,7 +87,7 @@ export default function Sidebar() {
             <p className="text-sm font-medium text-zinc-200 truncate">{user?.name}</p>
             <p className="text-xs text-zinc-500 truncate">{user?.role?.replace('_', ' ')}</p>
           </div>
-          <button onClick={handleLogout} className="text-zinc-500 hover:text-red-400 transition-colors p-1 rounded">
+          <button onClick={handleLogout} className="text-zinc-500 hover:text-red-400 transition-colors p-1 rounded" title="Logout">
             <LogOut size={14} />
           </button>
         </div>
