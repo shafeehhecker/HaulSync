@@ -1,10 +1,10 @@
 const express = require('express');
-const { PrismaClient } = require('@prisma/client');
+
 const { authenticate, authorize } = require('../middleware/auth');
 const { validate, createInvoiceRules, paginationRules } = require('../middleware/validators');
 
 const router = express.Router();
-const prisma = new PrismaClient();
+const prisma = require('../prisma');
 
 function generateInvoiceNumber() {
   return `INV-${new Date().getFullYear()}-${Date.now().toString().slice(-6)}`;
