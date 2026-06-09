@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { PrismaClient } = require('@prisma/client');
+
 const { authenticate, authorize } = require('../middleware/auth');
 const { uploadLimiter } = require('../middleware/rateLimiter');
 const {
@@ -13,7 +13,7 @@ const {
 } = require('../middleware/validators');
 
 const router = express.Router();
-const prisma = new PrismaClient();
+const prisma = require('../prisma');
 
 // ── File upload: validate MIME type, not just extension ───────────────────────
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
@@ -107,20 +107,24 @@ router.post(
     try {
       // Whitelist accepted fields to prevent mass-assignment
       const {
-        shipperId, vehicleId, driverId, goodsTypeId, routeId,
+        shipperCompanyId, vehicleId, driverId, goodsTypeId, routeId,
         originCity, originState, destCity, destState,
-        loadingDate, expectedDelivery, freightAmount, weight, distance, notes,
+        loadingDate, expectedDelivery, freightAmount, weight,
+        ewayBillNo, lrNumber, quantity, notes,
       } = req.body;
 
       const shipment = await prisma.shipment.create({
         data: {
-          shipperId, vehicleId, driverId, goodsTypeId, routeId,
+          shipperCompanyId, vehicleId: vehicleId || null, driverId: driverId || null,
+          goodsTypeId: goodsTypeId || null, routeId: routeId || null,
           originCity, originState, destCity, destState,
           loadingDate: new Date(loadingDate),
           expectedDelivery: expectedDelivery ? new Date(expectedDelivery) : null,
           freightAmount: freightAmount ? Number(freightAmount) : null,
           weight: weight ? Number(weight) : null,
-          distance: distance ? Number(distance) : null,
+          quantity: quantity ? Number(quantity) : 1,
+          ewayBillNo: ewayBillNo || null,
+          lrNumber: lrNumber || null,
           notes,
           shipmentNumber: generateShipmentNumber(),
           createdById: req.user.id,
@@ -143,7 +147,7 @@ router.post('/:id/tracking', authenticate, trackingEventRules, validate, async (
     const event = await prisma.trackingEvent.create({
       data: {
         shipmentId: req.params.id,
-        eventType, location, city, state,
+        eventType, location: location || city || 'En route', city: city || null, state: state || null,
         latitude: latitude != null ? Number(latitude) : null,
         longitude: longitude != null ? Number(longitude) : null,
         notes,
@@ -152,8 +156,11 @@ router.post('/:id/tracking', authenticate, trackingEventRules, validate, async (
 
     const statusMap = {
       DEPARTED: 'IN_TRANSIT',
+      PICKED_UP: 'IN_TRANSIT',
+      IN_TRANSIT: 'IN_TRANSIT',
       DELIVERED: 'DELIVERED',
       REACHED_DESTINATION: 'REACHED_DESTINATION',
+      REACHED_CHECKPOINT: 'IN_TRANSIT',
     };
     if (statusMap[eventType]) {
       await prisma.shipment.update({
