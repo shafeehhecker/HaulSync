@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+
+
+// Singleton Prisma instance — creating a new PrismaClient per request
+// exhausts the DB connection pool and causes crashes after a few uses
+const prisma = require('../prisma');
 
 const authenticate = async (req, res, next) => {
   try {
@@ -30,6 +33,9 @@ const authenticate = async (req, res, next) => {
 
 const authorize = (...roles) => {
   return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Not authenticated' });
+    }
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({ message: 'Access denied: insufficient permissions' });
     }
