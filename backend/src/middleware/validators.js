@@ -55,7 +55,7 @@ const createCompanyRules = [
 
 // ── Shipments ─────────────────────────────────────────────────────────────────
 const createShipmentRules = [
-  body('shipperId').isUUID().withMessage('Invalid shipper ID'),
+  body('shipperCompanyId').optional().isUUID().withMessage('Invalid shipper company ID'),
   body('originCity').trim().notEmpty().isLength({ max: 100 }),
   body('destCity').trim().notEmpty().isLength({ max: 100 }),
   body('loadingDate').isISO8601().withMessage('Valid loading date is required'),
@@ -65,8 +65,9 @@ const createShipmentRules = [
 const trackingEventRules = [
   param('id').isUUID().withMessage('Invalid shipment ID'),
   body('eventType')
-    .isIn(['CREATED', 'PICKED_UP', 'IN_TRANSIT', 'DEPARTED', 'ARRIVED', 'REACHED_DESTINATION', 'DELIVERED', 'DELAYED', 'EXCEPTION'])
+    .isIn(['CREATED', 'PICKED_UP', 'IN_TRANSIT', 'DEPARTED', 'ARRIVED', 'REACHED_DESTINATION', 'REACHED_CHECKPOINT', 'DELIVERED', 'DELAYED', 'EXCEPTION', 'HALTED'])
     .withMessage('Invalid event type'),
+  body('location').optional().trim(),  // optional in validator since backend defaults it
   body('latitude').optional().isFloat({ min: -90, max: 90 }),
   body('longitude').optional().isFloat({ min: -180, max: 180 }),
 ];
@@ -74,9 +75,16 @@ const trackingEventRules = [
 // ── RFQ ───────────────────────────────────────────────────────────────────────
 const createRFQRules = [
   body('title').trim().isLength({ min: 3, max: 200 }).withMessage('Title is required (3–200 chars)'),
-  body('shipperId').isUUID().withMessage('Invalid shipper ID'),
-  body('originCity').trim().notEmpty(),
-  body('destCity').trim().notEmpty(),
+  body('shipperCompanyId').isUUID().withMessage('Invalid shipper company ID'),
+  body('originCity').trim().notEmpty().withMessage('Origin city is required'),
+  body('destCity').trim().notEmpty().withMessage('Destination city is required'),
+  body('originState').trim().notEmpty().withMessage('Origin state is required'),
+  body('destState').trim().notEmpty().withMessage('Destination state is required'),
+  body('vehicleType').notEmpty().withMessage('Vehicle type is required'),
+  body('loadingDate').notEmpty().withMessage('Loading date is required'),
+  body('quantity').optional().isInt({ min: 1 }),
+  body('weight').optional().isFloat({ min: 0 }),
+  body('basePrice').optional().isFloat({ min: 0 }),
 ];
 
 const submitQuoteRules = [
@@ -89,7 +97,7 @@ const submitQuoteRules = [
 const createVehicleRules = [
   body('registrationNo').trim().notEmpty().isLength({ max: 20 }).withMessage('Registration number is required'),
   body('type').trim().notEmpty(),
-  body('companyId').isUUID().withMessage('Invalid company ID'),
+  body('companyId').optional().isUUID().withMessage('Invalid company ID'),
 ];
 
 const createDriverRules = [
@@ -111,7 +119,7 @@ const createInvoiceRules = [
 // ── Pagination ────────────────────────────────────────────────────────────────
 const paginationRules = [
   query('page').optional().isInt({ min: 1 }).withMessage('Page must be a positive integer'),
-  query('limit').optional().isInt({ min: 1, max: 100 }).withMessage('Limit must be between 1 and 100'),
+  query('limit').optional().isInt({ min: 1, max: 200 }).withMessage('Limit must be between 1 and 200'),
 ];
 
 module.exports = {
