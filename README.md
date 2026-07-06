@@ -143,15 +143,10 @@ Frontend runs on `http://localhost:5173`, backend on `http://localhost:5000`.
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
+Contributions are paused for the moment. Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
+Will inform on when PRs will reopen .
+Feel free to fork the repo.
 
-```bash
-# Fork the repo, then:
-git checkout -b feature/your-feature-name
-git commit -m "feat: add your feature"
-git push origin feature/your-feature-name
-# Open a Pull Request
-```
 ## Design System
 
 This module uses **teal** (`#14B8A6`) as its accent color to distinguish it from:
