@@ -105,10 +105,8 @@ We'll respond within 48 hours and work with you on disclosure timing.
 
 - **[HaulSync Architecture Docs](./docs/ARCHITECTURE.md)** — how modules integrate
 - **[Deployment Guide](./docs/DEPLOYMENT.md)** — self-hosting setup
-- **[Module Roadmap](./ROADMAP.md)** — what's coming and when
 - **[API Reference](./docs/API.md)** — standardized schemas across modules
-- **[Security Hardening Guide](./docs/SECURITY.md)** — our current posture and how to report
-
+  
 ---
 
 ## 💌 When Contributions Open
@@ -134,9 +132,7 @@ We're taking the same care with how we build community. We're not trying to move
 ## 📞 Questions?
 
 - **Deployment help** — open an issue or check the docs
-- **Feature feedback** — `feedback@haulsync.io`
-- **General questions** — join the community Slack (link in README)
-- **Business/partnership** — `hello@haulsync.io`
+- **Business/partnership** — Reach us through Linkedin 
 
 ---
 
