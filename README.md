@@ -7,7 +7,7 @@
 
 > **A self-hostable, full-stack freight and logistics management platform — built for enterprises, transport companies, and consignors.**
 
-HaulSync digitizes your entire logistics workflow: RFQ-based indenting, real-time shipment tracking, fleet management, POD collection, invoice reconciliation, and analytics — all in one open-source platform you fully control.
+HaulSync digitizes your entire logistics workflow: RFQ-based indenting, real-time shipment tracking, fleet management, POD collection, invoice reconciliation, and analytics — all in one open-source platform which you fully in control.
 
 ---
 <img width="1278" height="697" alt="image" src="https://github.com/user-attachments/assets/4879e911-e5be-46bc-be81-9c57bed095b1" />
